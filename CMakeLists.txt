@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.25.1)
 project(MiniMalloc)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 add_subdirectory(external/abseil-cpp)
 add_subdirectory(external/googletest)
 add_executable(minimalloc
@@ -79,5 +80,34 @@ target_link_libraries(validator_test
   absl::statusor
 )
 add_test(NAME validator_test COMMAND validator_test)
+
+add_library(minimalloc_api SHARED
+  src/c_wrapper.cc
+  src/minimalloc.cc
+  src/solver.cc
+  src/sweeper.cc
+  src/validator.cc
+)
+
+target_include_directories(minimalloc_api PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+target_link_libraries(minimalloc_api
+  absl::base
+  absl::core_headers
+  absl::flags
+  absl::flags_parse
+  absl::flags_internal
+  absl::hash
+  absl::memory
+  absl::numeric
+  absl::status
+  absl::statusor
+  absl::strings
+  absl::synchronization
+  absl::time
+  absl::utility
+)
 
 include(GoogleTest)
