@@ -1,4 +1,5 @@
 import ctypes
+import os
 from ctypes import POINTER, c_char_p, c_int64, c_size_t, c_void_p
 from dataclasses import dataclass
 
@@ -20,7 +21,8 @@ class _CSolution(ctypes.Structure):
     ]
 
 
-_lib = ctypes.CDLL("./build/libminimalloc_api.so")
+_lib_path = os.path.join(os.path.dirname(__file__), "libminimalloc_api.so")
+_lib = ctypes.CDLL(_lib_path)
 
 _lib.Problem_Create.argtypes = [POINTER(_CBuffer), c_size_t, c_int64]
 _lib.Problem_Create.restype = c_void_p
